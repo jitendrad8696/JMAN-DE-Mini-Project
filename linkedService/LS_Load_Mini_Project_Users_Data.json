@@ -14,7 +14,7 @@
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "https://book-review-site-backend.onrender.com/api/v1/users/get-all-users",
+			"url": "https://book-review-site-backend.onrender.com/api/v1/users/get-all-users?limit={limit}&offset={offset}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
