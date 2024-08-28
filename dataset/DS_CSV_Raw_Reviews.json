@@ -5,6 +5,9 @@
 			"referenceName": "LS_Azure_Blob_Storage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DWH/01_Raw"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

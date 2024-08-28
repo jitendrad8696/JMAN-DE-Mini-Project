@@ -1,0 +1,234 @@
+{
+	"name": "PL_Load_Mongo_Data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy User Data",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbAtlasSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['_id']['$oid']"
+								},
+								"sink": {
+									"name": "_id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['email']"
+								},
+								"sink": {
+									"name": "email"
+								}
+							},
+							{
+								"source": {
+									"path": "$['firstName']"
+								},
+								"sink": {
+									"name": "firstName"
+								}
+							},
+							{
+								"source": {
+									"path": "$['lastName']"
+								},
+								"sink": {
+									"name": "lastName"
+								}
+							},
+							{
+								"source": {
+									"path": "$['userType']"
+								},
+								"sink": {
+									"name": "userType"
+								}
+							},
+							{
+								"source": {
+									"path": "$['createdAt']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "createdAt"
+								}
+							},
+							{
+								"source": {
+									"path": "$['updatedAt']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "updatedAt"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_MONGO_Raw_Users",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SQL_Raw_Users",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy Books Data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy User Data",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbAtlasSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['_id']['$oid']"
+								},
+								"sink": {
+									"name": "_id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['title']"
+								},
+								"sink": {
+									"name": "title"
+								}
+							},
+							{
+								"source": {
+									"path": "$['author']"
+								},
+								"sink": {
+									"name": "author"
+								}
+							},
+							{
+								"source": {
+									"path": "$['genre']"
+								},
+								"sink": {
+									"name": "genre"
+								}
+							},
+							{
+								"source": {
+									"path": "$['description']"
+								},
+								"sink": {
+									"name": "description"
+								}
+							},
+							{
+								"source": {
+									"path": "$['publishedYear']['$numberInt']"
+								},
+								"sink": {
+									"name": "publishedYear"
+								}
+							},
+							{
+								"source": {
+									"path": "$['image']"
+								},
+								"sink": {
+									"name": "image"
+								}
+							},
+							{
+								"source": {
+									"path": "$['createdAt']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "createdAt"
+								}
+							},
+							{
+								"source": {
+									"path": "$['updatedAt']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "updatedAt"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_MONGO_Raw_Books",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SQL_Raw_Books",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "DWH/01_Ingestion"
+		},
+		"annotations": []
+	}
+}

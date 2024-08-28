@@ -1,19 +1,18 @@
 {
-	"name": "DS_SQL_Raw_Reviews",
+	"name": "DS_MONGO_Raw_Reviews",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_Azure_SQL_Database",
+			"referenceName": "LS_Mongo_Db_Atlas",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
 			"name": "DWH/01_Raw"
 		},
 		"annotations": [],
-		"type": "AzureSqlTable",
+		"type": "MongoDbAtlasCollection",
 		"schema": [],
 		"typeProperties": {
-			"schema": "raw",
-			"table": "reviews"
+			"collection": "reviews"
 		}
 	}
 }
