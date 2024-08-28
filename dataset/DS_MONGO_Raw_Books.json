@@ -5,6 +5,9 @@
 			"referenceName": "LS_Mongo_Db_Atlas",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DWH/01_Raw"
+		},
 		"annotations": [],
 		"type": "MongoDbAtlasCollection",
 		"schema": [],
