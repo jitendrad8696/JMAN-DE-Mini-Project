@@ -1,0 +1,16 @@
+{
+	"name": "DS_SQL_Raw_Reviews",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_SQL_Database",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "raw",
+			"table": "reviews"
+		}
+	}
+}

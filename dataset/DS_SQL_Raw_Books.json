@@ -1,0 +1,19 @@
+{
+	"name": "DS_SQL_Raw_Books",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_SQL_Database",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH/01_Raw"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "raw",
+			"table": "books"
+		}
+	}
+}
