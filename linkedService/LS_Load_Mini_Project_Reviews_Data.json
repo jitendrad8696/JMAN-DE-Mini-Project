@@ -1,0 +1,22 @@
+{
+	"name": "LS_Load_Mini_Project_Reviews_Data",
+	"properties": {
+		"parameters": {
+			"limit": {
+				"type": "int",
+				"defaultValue": 1000
+			},
+			"offset": {
+				"type": "int",
+				"defaultValue": 0
+			}
+		},
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://book-review-site-backend.onrender.com/api/v1/reviews/get-all-reviews",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
