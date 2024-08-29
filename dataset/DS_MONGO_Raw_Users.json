@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "DWH/01_Raw"
+			"name": "DWH/01_Ingestion"
 		},
 		"annotations": [],
 		"type": "MongoDbAtlasCollection",

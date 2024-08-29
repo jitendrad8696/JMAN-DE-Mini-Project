@@ -1,5 +1,5 @@
 {
-	"name": "PL_Load_Mongo_Data",
+	"name": "PL_Load_Mini_Project_Data",
 	"properties": {
 		"activities": [
 			{
@@ -21,9 +21,14 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"_id"
+							]
+						},
 						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
@@ -128,9 +133,14 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"_id"
+							]
+						},
 						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
@@ -221,6 +231,102 @@
 				"outputs": [
 					{
 						"referenceName": "DS_SQL_Raw_Books",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy Reviews Data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy Books Data",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbAtlasSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"_id"
+							]
+						},
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['_id']['$oid']"
+								},
+								"sink": {
+									"name": "_id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['user']['$oid']"
+								},
+								"sink": {
+									"name": "user_id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['book']['$oid']"
+								},
+								"sink": {
+									"name": "book_id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['rating']['$numberInt']"
+								},
+								"sink": {
+									"name": "rating"
+								}
+							},
+							{
+								"source": {
+									"path": "$['reviewText']"
+								},
+								"sink": {
+									"name": "reviewText"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_MONGO_Raw_Reviews",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_SQL_Raw_Reviews",
 						"type": "DatasetReference"
 					}
 				]
