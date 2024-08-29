@@ -1,0 +1,19 @@
+{
+	"name": "DS_SQL_Prep_Mini_Project",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_SQL_Database",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH/02_Prep"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "prep",
+			"table": "mini_project"
+		}
+	}
+}
