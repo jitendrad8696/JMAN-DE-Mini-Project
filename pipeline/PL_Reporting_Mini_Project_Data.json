@@ -1,0 +1,35 @@
+{
+	"name": "PL_Reporting_Mini_Project_Data",
+	"properties": {
+		"activities": [
+			{
+				"name": "Reporting Mini Project Data",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Reporting_Mini_Project_Data",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "DWH/03_Reporting"
+		},
+		"annotations": []
+	}
+}

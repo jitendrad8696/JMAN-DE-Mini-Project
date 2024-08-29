@@ -1,0 +1,92 @@
+{
+	"name": "DF_Reporting_Mini_Project_Data",
+	"properties": {
+		"folder": {
+			"name": "DWH/03_Reporting"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Prep_Mini_Project",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Reporting_Mini_Project",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "window1"
+				},
+				{
+					"name": "window2"
+				},
+				{
+					"name": "window3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {_id} as string,",
+				"          author as string,",
+				"          genre as string,",
+				"          publishedYear as integer,",
+				"          book_id as string,",
+				"          avg_rating as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          {_id},",
+				"          author,",
+				"          genre,",
+				"          publishedYear,",
+				"          book_id,",
+				"          avg_rating",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 rank(desc(avg_rating, true),",
+				"     output(book_overall_rank as long)) ~> rank1",
+				"rank1 window(over(publishedYear),",
+				"     desc(avg_rating, true),",
+				"     book_year_rank = rank()) ~> window1",
+				"window1 window(over(genre),",
+				"     desc(avg_rating, true),",
+				"     book_genre_rank = rank()) ~> window2",
+				"window2 window(over(publishedYear,",
+				"          genre),",
+				"     desc(avg_rating, true),",
+				"     book_year_genre_rank = rank()) ~> window3",
+				"window3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
