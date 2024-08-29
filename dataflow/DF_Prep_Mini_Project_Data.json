@@ -1,0 +1,152 @@
+{
+	"name": "DF_Prep_Mini_Project_Data",
+	"properties": {
+		"folder": {
+			"name": "DWH/02_Prep"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Raw_Books",
+						"type": "DatasetReference"
+					},
+					"name": "books"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Raw_Reviews",
+						"type": "DatasetReference"
+					},
+					"name": "reviews"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Reporting_Mini_Project",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Prep_Mini_Project",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "rank1"
+				},
+				{
+					"name": "window1"
+				},
+				{
+					"name": "window2"
+				},
+				{
+					"name": "window3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {_id} as string,",
+				"          title as string,",
+				"          author as string,",
+				"          genre as string,",
+				"          description as string,",
+				"          publishedYear as integer,",
+				"          image as string,",
+				"          createdAt as string,",
+				"          updatedAt as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> books",
+				"source(output(",
+				"          {_id} as string,",
+				"          user_id as string,",
+				"          book_id as string,",
+				"          rating as integer,",
+				"          reviewText as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> reviews",
+				"books select(mapColumn(",
+				"          {_id},",
+				"          author,",
+				"          genre,",
+				"          publishedYear",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"reviews select(mapColumn(",
+				"          {_id},",
+				"          user_id,",
+				"          book_id,",
+				"          rating",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 aggregate(groupBy(book_id),",
+				"     avg_rating = avg(rating)) ~> aggregate1",
+				"select1, aggregate1 join({_id} == book_id,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 rank(desc(avg_rating, true),",
+				"     output(book_overall_rank as long)) ~> rank1",
+				"rank1 window(over(publishedYear),",
+				"     desc(avg_rating, true),",
+				"     book_year_rank = rank()) ~> window1",
+				"window1 window(over(genre),",
+				"     desc(avg_rating, true),",
+				"     book_genre_rank = rank()) ~> window2",
+				"window2 window(over(publishedYear,",
+				"          genre),",
+				"     desc(avg_rating, true),",
+				"     book_year_genre_rank = rank()) ~> window3",
+				"window3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}

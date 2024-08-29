@@ -1,0 +1,19 @@
+{
+	"name": "DS_SQL_Reporting_Mini_Project",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_SQL_Database",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH/03_Reporting"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "reporting",
+			"table": "mini_project"
+		}
+	}
+}
