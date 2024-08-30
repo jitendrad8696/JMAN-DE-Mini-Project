@@ -13,12 +13,61 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Raw_Misumi",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
 				}
 			],
 			"sinks": [],
 			"transformations": [
 				{
 					"name": "select1"
+				},
+				{
+					"name": "window3"
+				},
+				{
+					"name": "filter3"
+				},
+				{
+					"name": "select7"
+				},
+				{
+					"name": "window4"
+				},
+				{
+					"name": "filter4"
+				},
+				{
+					"name": "select8"
+				},
+				{
+					"name": "select9"
+				},
+				{
+					"name": "select10"
+				},
+				{
+					"name": "select11"
+				},
+				{
+					"name": "window5"
+				},
+				{
+					"name": "window6"
+				},
+				{
+					"name": "filter5"
+				},
+				{
+					"name": "select13"
+				},
+				{
+					"name": "window8"
 				}
 			],
 			"scriptLines": [
@@ -58,28 +107,114 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
+				"source(output(",
+				"          Department as string,",
+				"          Category as string,",
+				"          Subcategory as string,",
+				"          {Department Code} as string,",
+				"          {Category Code} as string,",
+				"          {Category Name} as string,",
+				"          {Search Category Code} as string,",
+				"          {Series Code} as string,",
+				"          {Series Name} as string,",
+				"          {Brand Code} as string,",
+				"          {Brand URL Code} as string,",
+				"          {Brand Name} as string,",
+				"          {Series Status} as string,",
+				"          {Min Days to Ship} as string,",
+				"          {Max Days to Ship} as string,",
+				"          {Direct Cart Type} as string,",
+				"          {Price Check Less Flag} as string,",
+				"          {Recommend Flag} as string,",
+				"          {Volume Discount Flag} as string,",
+				"          {C Value Flag} as string,",
+				"          {Stock Item Flag} as string,",
+				"          {Display Standard Price Flag} as string,",
+				"          {Discontinued Product Flag} as string,",
+				"          {Misumi Flag} as string,",
+				"          {Package Spec Flag} as string,",
+				"          {Simple Flag} as string,",
+				"          {Page View} as string,",
+				"          {Prompt Delivery Flag} as string,",
+				"          {Keyword Click Count} as string,",
+				"          {Special Shipment Flag} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
 				"source1 select(mapColumn(",
 				"          Department,",
 				"          Category,",
 				"          Subcategory,",
-				"          {Department Code},",
-				"          {Category Code},",
-				"          {Category Name},",
-				"          {Series Code},",
 				"          {Series Name},",
-				"          {Brand Code},",
-				"          {Brand URL Code},",
+				"          {Series Code},",
 				"          {Brand Name},",
+				"          {Brand Code},",
 				"          {Series Status},",
 				"          {Min Days to Ship},",
 				"          {Max Days to Ship},",
 				"          {Direct Cart Type},",
 				"          {Recommend Flag},",
-				"          {Discontinued Product Flag},",
-				"          {Misumi Flag}",
+				"          {Discontinued Product Flag}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select9 window(over(Category),",
+				"     asc(Category, true),",
+				"     temp = rowNumber()) ~> window3",
+				"window3 filter(temp==1) ~> filter3",
+				"select1 select(mapColumn(",
+				"          Department",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select7",
+				"select7 window(over(Department),",
+				"     asc(Department, true),",
+				"     temp = rowNumber()) ~> window4",
+				"window4 filter(temp==1) ~> filter4",
+				"filter4 select(mapColumn(",
+				"          Department",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select8",
+				"select1 select(mapColumn(",
+				"          Department,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select9",
+				"filter3 select(mapColumn(",
+				"          Department,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select10",
+				"select1 select(mapColumn(",
+				"          Department,",
+				"          Category,",
+				"          Subcategory",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select11",
+				"select10 window(over(Department),",
+				"     asc(Department, true),",
+				"     {Category Count} = count(Category)) ~> window5",
+				"select11 window(over(Subcategory),",
+				"     asc(Subcategory, true),",
+				"     temp = rowNumber()) ~> window6",
+				"window6 filter(temp==1) ~> filter5",
+				"filter5 select(mapColumn(",
+				"          Department,",
+				"          Category,",
+				"          Subcategory",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select13",
+				"select13 window(over(Department,",
+				"          Category),",
+				"     asc(Department, true),",
+				"     {Subcategory Count} = count(Subcategory)) ~> window8"
 			]
 		}
 	}
