@@ -1,0 +1,19 @@
+{
+	"name": "DS_SQL_Raw_Misumi",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_SQL_Database",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH/01_Ingestion"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "raw",
+			"table": "misumi"
+		}
+	}
+}
