@@ -68,6 +68,24 @@
 				},
 				{
 					"name": "window8"
+				},
+				{
+					"name": "select14"
+				},
+				{
+					"name": "window9"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select15"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select16"
 				}
 			],
 			"scriptLines": [
@@ -214,7 +232,59 @@
 				"select13 window(over(Department,",
 				"          Category),",
 				"     asc(Department, true),",
-				"     {Subcategory Count} = count(Subcategory)) ~> window8"
+				"     {Subcategory Count} = count(Subcategory)) ~> window8",
+				"select1 select(mapColumn(",
+				"          Department,",
+				"          Category,",
+				"          Subcategory,",
+				"          {Series Name},",
+				"          {Series Code},",
+				"          {Series Status}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select14",
+				"select14 window(over(Department,",
+				"          Category,",
+				"          Subcategory),",
+				"     asc(Department, true),",
+				"     {Series Count} = count({Series Code})) ~> window9",
+				"window9, window5 join(select14@Department == select10@Department",
+				"     && select14@Category == select10@Category,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          Department = select14@Department,",
+				"          Category = select14@Category,",
+				"          Subcategory,",
+				"          {Series Name},",
+				"          {Series Code},",
+				"          {Series Status},",
+				"          {Series Count},",
+				"          {Category Count}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select15",
+				"select15, window8 join(select15@Department == select13@Department",
+				"     && select15@Category == select13@Category",
+				"     && select15@Subcategory == select13@Subcategory,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          Department = select15@Department,",
+				"          Category = select15@Category,",
+				"          Subcategory = select15@Subcategory,",
+				"          {Series Name},",
+				"          {Series Code},",
+				"          {Category Count},",
+				"          {Subcategory Count},",
+				"          {Series Count}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select16"
 			]
 		}
 	}
