@@ -1,0 +1,146 @@
+{
+	"name": "DS_BLOB__Raw_Misumi",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Azure_Blob_Storage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH/01_Ingestion"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "misumi_data",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "misumi_data.xlsx",
+				"folderPath": "MISUMI",
+				"container": "input"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Department",
+				"type": "String"
+			},
+			{
+				"name": "Category",
+				"type": "String"
+			},
+			{
+				"name": "Subcategory",
+				"type": "String"
+			},
+			{
+				"name": "Department Code",
+				"type": "String"
+			},
+			{
+				"name": "Category Code",
+				"type": "String"
+			},
+			{
+				"name": "Category Name",
+				"type": "String"
+			},
+			{
+				"name": "Search Category Code",
+				"type": "String"
+			},
+			{
+				"name": "Series Code",
+				"type": "String"
+			},
+			{
+				"name": "Series Name",
+				"type": "String"
+			},
+			{
+				"name": "Brand Code",
+				"type": "String"
+			},
+			{
+				"name": "Brand URL Code",
+				"type": "String"
+			},
+			{
+				"name": "Brand Name",
+				"type": "String"
+			},
+			{
+				"name": "Series Status",
+				"type": "String"
+			},
+			{
+				"name": "Min Days to Ship",
+				"type": "String"
+			},
+			{
+				"name": "Max Days to Ship",
+				"type": "String"
+			},
+			{
+				"name": "Direct Cart Type",
+				"type": "String"
+			},
+			{
+				"name": "Price Check Less Flag",
+				"type": "String"
+			},
+			{
+				"name": "Recommend Flag",
+				"type": "String"
+			},
+			{
+				"name": "Volume Discount Flag",
+				"type": "String"
+			},
+			{
+				"name": "C Value Flag",
+				"type": "String"
+			},
+			{
+				"name": "Stock Item Flag",
+				"type": "String"
+			},
+			{
+				"name": "Display Standard Price Flag",
+				"type": "String"
+			},
+			{
+				"name": "Discontinued Product Flag",
+				"type": "String"
+			},
+			{
+				"name": "Misumi Flag",
+				"type": "String"
+			},
+			{
+				"name": "Package Spec Flag",
+				"type": "String"
+			},
+			{
+				"name": "Simple Flag",
+				"type": "String"
+			},
+			{
+				"name": "Page View",
+				"type": "String"
+			},
+			{
+				"name": "Prompt Delivery Flag",
+				"type": "String"
+			},
+			{
+				"name": "Keyword Click Count",
+				"type": "String"
+			},
+			{
+				"name": "Special Shipment Flag",
+				"type": "String"
+			}
+		]
+	}
+}
