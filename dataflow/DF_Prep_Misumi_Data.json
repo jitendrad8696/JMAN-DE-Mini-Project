@@ -15,7 +15,15 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_SQL_Prep_Misumi",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
@@ -85,6 +93,12 @@
 				},
 				{
 					"name": "select17"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select18"
 				}
 			],
 			"scriptLines": [
@@ -102,8 +116,8 @@
 				"          {Brand URL Code} as string,",
 				"          {Brand Name} as string,",
 				"          {Series Status} as string,",
-				"          {Min Days to Ship} as string,",
-				"          {Max Days to Ship} as string,",
+				"          {Min Days to Ship} as integer,",
+				"          {Max Days to Ship} as integer,",
 				"          {Direct Cart Type} as string,",
 				"          {Price Check Less Flag} as string,",
 				"          {Recommend Flag} as string,",
@@ -271,7 +285,35 @@
 				"          {Max Days to Ship}",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select17"
+				"     skipDuplicateMapOutputs: true) ~> select17",
+				"select17 derive({Avg Days to Ship} = ({Max Days to Ship}+{Min Days to Ship})/2) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          Department,",
+				"          {Category Count},",
+				"          Category,",
+				"          {Subcategory Count},",
+				"          Subcategory,",
+				"          {Series Count},",
+				"          {Series Code},",
+				"          {Series Name},",
+				"          {Brand Code},",
+				"          {Min Days to Ship},",
+				"          {Max Days to Ship},",
+				"          {Avg Days to Ship}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select18",
+				"select18 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
